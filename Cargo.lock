@@ -3,7 +3,7 @@ name = "rust-timetables"
 version = "0.1.0"
 dependencies = [
  "flate2 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)",
- "ftp 2.1.1",
+ "ftp 2.1.1 (git+https://github.com/tomverran/rust-ftp.git)",
  "tempfile 2.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -36,6 +36,7 @@ dependencies = [
 [[package]]
 name = "ftp"
 version = "2.1.1"
+source = "git+https://github.com/tomverran/rust-ftp.git#c8528a48848573ff548dd8a447ecd8414cf2d318"
 dependencies = [
  "chrono 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 0.1.16 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -217,6 +218,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum aho-corasick 0.5.3 (registry+https://github.com/rust-lang/crates.io-index)" = "ca972c2ea5f742bfce5687b9aef75506a764f61d37f8f649047846a9686ddb66"
 "checksum chrono 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)" = "9213f7cd7c27e95c2b57c49f0e69b1ea65b27138da84a170133fd21b07659c00"
 "checksum flate2 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)" = "d4e4d0c15ef829cbc1b7cda651746be19cceeb238be7b1049227b14891df9e25"
+"checksum ftp 2.1.1 (git+https://github.com/tomverran/rust-ftp.git)" = "<none>"
 "checksum gcc 0.3.43 (registry+https://github.com/rust-lang/crates.io-index)" = "c07c758b972368e703a562686adb39125707cc1ef3399da8c019fc6c2498a75d"
 "checksum kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7507624b29483431c0ba2d82aece8ca6cdba9382bff4ddd0f7490560c056098d"
 "checksum lazy_static 0.1.16 (registry+https://github.com/rust-lang/crates.io-index)" = "cf186d1a8aa5f5bee5fd662bc9c1b949e0259e1bcc379d1f006847b0080c7417"

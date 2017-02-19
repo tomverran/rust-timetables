@@ -4,14 +4,18 @@ extern crate flate2;
 
 use ftp::FtpStream;
 use ftp::types::FtpError;
+use ftp::types::FileType;
 use std::io;
 use std::str;
 use std::env;
 use std::fs::File;
 use std::io::Write;
 use std::io::Read;
+use std::io::Seek;
+use std::io::SeekFrom;
 use std::io::Error;
 use flate2::read::GzDecoder;
+use std::convert::From;
 
 #[derive(Debug)]
 enum TimetableError {
@@ -20,6 +24,17 @@ enum TimetableError {
     NoTimetable
 }
 
+impl From<FtpError> for TimetableError {
+    fn from(f: FtpError) -> TimetableError {
+        TimetableError::Ftp(f)
+    }
+}
+
+impl From<Error> for TimetableError {
+    fn from(f: Error) -> TimetableError {
+        TimetableError::IO(f)
+    }
+}
 // the main either type of this entire program
 type TimetableResult<A> = Result<A, TimetableError>;
 
@@ -32,13 +47,13 @@ fn find_v8_timetable(v: Vec<String>) -> TimetableResult<String> {
 }
 
 fn download_file(mut ftp: FtpStream, file: String) -> TimetableResult<File> {
-    ftp.retr(&file, |r| {
-        tempfile::tempfile().and_then(|mut t| {
-            let res = io::copy(r, Write::by_ref(&mut t));
-            println!("copied {:?}", res);
-            Result::Ok(t)
-        }).map_err(FtpError::ConnectionError)
-    }).map_err(TimetableError::Ftp)
+    ftp.transfer_type(FileType::Binary)?;
+    return ftp.retr(&file, |r| {
+        let mut temp = tempfile::tempfile().map_err(FtpError::ConnectionError)?;
+        io::copy(r, Write::by_ref(&mut temp)).map_err(FtpError::ConnectionError)?;
+        temp.seek(SeekFrom::Start(0)).map_err(FtpError::ConnectionError)?;
+        Result::Ok(temp)
+    }).map_err(TimetableError::Ftp);
 }
 
 fn main() {

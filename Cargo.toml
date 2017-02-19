@@ -4,6 +4,6 @@ version = "0.1.0"
 authors = ["tomverran <tom@tomverran.co.uk>"]
 
 [dependencies]
-ftp = { path = "../rust-ftp" }
+ftp = { git = "https://github.com/tomverran/rust-ftp.git" }
 tempfile = "2.1.5"
 flate2 = "0.2"
