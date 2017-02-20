@@ -1,0 +1,33 @@
+language: rust
+rust:
+  - 1.15.1
+
+cache: cargo
+
+script:
+  - cargo build --release --verbose
+  - mv target/release/rust-timetables deploy/rust-timetables
+  - chmod 777 deploy/rust-timetables
+  - zip -j rust-timetables.zip deploy/*
+  - ls
+  
+deploy:
+  provider: lambda
+  function_name: "timetable-ftp-2"
+  access_key_id: $AWS_ACCESS_KEY_ID
+  role: $ROLE_ARN
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  zip: "rust-timetables.zip"
+  skip_cleanup: true
+  handler_name: "handler"
+  runtime: "nodejs4.3"
+  region: "eu-west-1"
+  
+env:
+  global:
+    # access key id
+    - secure: "fU4H8TchsV78dP/hAMrCUUfwPOeH+4BRXnYTIexPjsr4pGmMMRgxHNKU791CzxkxPlox4DS6sdpX83jNxI+fhAQunquu28KDVc2OorNhSVYmTng0a2/lo4MWRXTH5KiwFu7Jz6D08uW/tiRsETRQBwu1+L7yo3kN7tgTuLGK2vD6VAWHaBtafoDJTsZaUMkaN9cWLvc0FWu4P0O4abjbokZq6KYRuc9tf9RGB/D84q8xUKsBmeQd6+JxnBF6CJ+DT0YBonssZ/tPv25Yt/aiEuxFNzK7yeTkPujdxa8KuBPEQAHUKM1hSPudz2ykco1pDt9Xji01festjW7YfqHTTTd4ht3w0AYh6jkYTrCpIEl1csp62Aev3lKTKbNYDxf1HXvozLriYZ6krkWFaG4srFhc3+zb9wzEWxiShFVuUfMecZ/h/ilLP5an/VajyNrcNNHEh1OPmo3HnSv7KnEUYn1clrX9sTVWRfyZRV9xI6TOKq+3R0m1wpwJn4EHNZTy2lmaNpgUmEeT+5xarRGQxrUtIgYDs6C3I7U3u5BWOAokr1h+lt1pqTa+BN7yB9wpSyUSsLuxoMwu3lUxGH7tTj1e6E9b7Lx9ZE+A/76dm5Q5zIUN3OJRuq7cwmdzjHYHA3QHwbQ8kR3maxX4lO2OxTXyznNpw490V0W9toFdWpk="
+    # secret access key
+    - secure: "W+G8EDiFx+PKOq2+xtanZeaRADl2OpSd/ai+qz0cQ+j/jCFaK7V8Mo2a8wNAYQOMljLG8SnfPbxmmN3kb4/NnObci0GCT3pR/I6c/Msedn03IPj5u6qJ0b5mQLv7BQzH0I96GUzku1ZoJC+dvVX1kIk1snso6F1ZlA/6a+VbF6cuDNQAnKEw8g9Mm74XuT+dPXp26Z7okhy5Phit/jbu9SEzdALJNLBC+wX5dQQShv9rtQxuxrshYvlWIvOPHYRWxoWUARC/f1MeFfp4T+08InEM0U7MlUBbu0QJJAhzyu0y9zx+m0G0WLQgaIzla0881nllTZMBbnyASCKDj4XaRdU/e0kLd3SyZH0tPYUWxTXbGHXbUZnK5inv+6JyK57hvz5xRA77Agp4d25ZgT7OfViTQwxDC37IN7xFhvjNSxcPNHBH8C5m0H0S+0Coqg5P/x6UwN8gs/EsYORzAKjsjSc/BG6d+5LUV1kKHcN1EAmQgXQr3UsicycJCfh3abW/5zkPumHzryd0jnm8TUIaTMYMowwl8q/waWB/4Wilrc0Bq00HqohxKHWWWVr6ro1XsrzKurj0ab21tUY4T84QHTBv2/a2KWQ+ETg+nnJNHbpwzC3PUScvMH/Pj82Ul2zxIZL/bAtRQzz+9WghdAdiVy6wbwBRyEWHDVn2pU3PYvc="
+    # role arn
+    - secure: "sVTvAO2yWDvv2wstFwd+rznNmGCYEd++n2vb7SN8STWypMhFna9uEVQjdCtOsckai4PK8bBIqW0JMFmW9hZzLUq4lgkDMBi2fUG8Y9FQMxN1/1F3pwWWXDhCQk6/ElSvvga+f7s/QkNJHilvbgUSjLmHZKKN3PFO4pfYTZ7BC0bx1hkWo2VTg0rQ5uMb+u/uG8tWIYa/C9RlAA+L5g20Q2UFUjP8RWlAsUODNYcP2M+yK5ItC1MCQoVr5Uk+UxuHgDtdBgwucF+neto2kcciM66AoE3ScZKPKTlrpUH2y/roBa1i6+1x66JTox3CpQ0VtSOtNMIwRZf2wsSnP8WCeQtcp2qP8qGLdfC6oZtP5hSEu7pLrDkoCbTEWZI8FjICquvxrzJ7TT2r51E4nURa1LR/r3j1M3h1UnwPFjMLHy+297Z4GmFmktngvxCsLn9P+7Qz6aK7bczic8Q3n9yX8guJGF+c9SaGzCKk1bn3EK3nhZQV86reQ9PAxkiss90OPEB4RJeA8rrki969e8Bx2p0bHqDdM3iVQuGajH8PI6f2MaZf6ec8+/1yP8LPwVj0lHzK8xYfItZbj/mOLzmzFOzNV+VbSsnxfNLGzrLcnEij77GrB5lx56XeS/ABP/BvmLI7lqQflnr5fptKak+gb5I4+wArAG+abrUPHYUsqec="
