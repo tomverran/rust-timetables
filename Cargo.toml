@@ -5,5 +5,5 @@ authors = ["tomverran <tom@tomverran.co.uk>"]
 
 [dependencies]
 ftp = { git = "https://github.com/tomverran/rust-ftp.git" }
-tempfile = "2.1.5"
+xml-rs = "0.3.6"
 flate2 = "0.2"
